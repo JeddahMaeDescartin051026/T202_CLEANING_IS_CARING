@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#216747">
+<title>Cleaning Is Caring!</title>
+<style>
+:root{--green:#216747;--green2:#2f8b58;--mint:#e9f6ed;--red:#e44f4f;--redbg:#fff0ef;--ink:#20352b;--muted:#687970;--paper:#fbfcf8;--line:#dce7df;--gold:#f1b84b;--shadow:0 16px 45px #173b2912}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#eff8f0,#f9fbf7 48%,#f5f8f2);font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif;color:var(--ink);min-height:100vh}
+button{font:inherit;cursor:pointer;border:0}button:focus-visible{outline:3px solid #e6ad3e;outline-offset:3px}
+.app{width:min(100%,760px);margin:auto;padding:18px 16px 40px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 22px}.brand{display:flex;align-items:center;gap:10px;font-weight:850;font-size:1.04rem}.brand-icon{width:42px;height:42px;border-radius:15px;background:var(--green);color:#fff;display:grid;place-items:center;font-size:23px;box-shadow:0 7px 18px #21674725}.tagline{font-size:.75rem;color:var(--muted);font-weight:500;margin-top:2px}.date-chip{font-size:.76rem;color:var(--muted);text-align:right}
+.screen{display:none;animation:appear .24s ease}.screen.active{display:block}@keyframes appear{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.panel{background:#ffffffd9;border:1px solid #e1ebe2;border-radius:25px;padding:clamp(20px,5vw,34px);box-shadow:var(--shadow)}
+.hero{text-align:center;padding:38px 20px 34px;overflow:hidden;position:relative}.hero:before,.hero:after{content:"";position:absolute;width:170px;height:170px;background:#e5f4e3;border-radius:50%;z-index:0}.hero:before{left:-100px;top:-90px}.hero:after{right:-100px;bottom:-95px}.hero>*{position:relative;z-index:1}.house{font-size:66px;line-height:1.2;margin:12px 0}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:.72rem;font-weight:850;color:var(--green2)}h1{font-size:clamp(2.25rem,8vw,4.2rem);line-height:1.02;letter-spacing:-.05em;color:var(--green);margin:12px 0 16px}h2{font-size:clamp(1.45rem,5vw,2rem);line-height:1.15;margin:0 0 9px;letter-spacing:-.03em}h3{margin:0 0 8px}.sub{color:var(--muted);line-height:1.55;margin:0 auto 22px;max-width:420px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 18px;border-radius:15px;font-weight:800;transition:transform .15s,filter .15s;min-height:48px}.btn:active{transform:scale(.98)}.btn-primary{background:var(--green);color:white;box-shadow:0 7px 18px #21674725}.btn-secondary{background:#edf5ee;color:var(--green)}.btn-danger{background:var(--red);color:white}.btn-block{width:100%}.btn-small{min-height:38px;padding:9px 12px;font-size:.84rem}.profile-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0 8px}.profile{background:#fff;border:1.5px solid var(--line);border-radius:19px;padding:15px 7px 13px;display:flex;flex-direction:column;align-items:center;gap:9px;color:var(--ink);font-weight:800;min-width:0}.profile:hover,.profile:focus-visible{border-color:var(--green2);background:#f4fbf5}.avatar{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;font-size:37px;box-shadow:inset 0 -4px 0 #0000000a}.avatar.big{width:76px;height:76px;font-size:43px}.profile-name{font-size:.88rem;overflow-wrap:anywhere}.muted{color:var(--muted)}.small{font-size:.82rem;line-height:1.45}.back{background:transparent;color:var(--green);padding:10px 0;font-weight:750;margin-top:10px}.welcome-row{display:flex;align-items:center;gap:13px;margin-bottom:20px}.welcome-row .avatar{flex-shrink:0}.date-line{font-size:.8rem;color:var(--muted);margin-bottom:16px}.assignment{background:var(--mint);border:1px solid #d7eadb;border-radius:20px;padding:18px;margin:15px 0}.assignment h2{margin:6px 0 4px}.chore-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.13em;color:var(--green2);font-weight:850}.room-placeholder{min-height:170px;border-radius:18px;background:linear-gradient(140deg,#f4e8d2,#d7e9d4);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;text-align:center;padding:20px;color:#3d614a;margin:16px 0;border:1px dashed #a9c6ad}.room-placeholder .room-emoji{font-size:52px}.room-placeholder strong{font-size:1.05rem}.room-placeholder span{font-size:.8rem;max-width:290px}
+.room-card{border:1px solid var(--line);border-radius:18px;background:#fff;padding:12px;margin:16px 0;overflow:hidden}
+.room-card-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:2px 2px 12px}
+.room-chip{display:inline-flex;background:var(--mint);color:var(--green);font-size:.72rem;font-weight:900;letter-spacing:.08em;padding:7px 10px;border-radius:99px}
+.room-layout-image{display:block;width:100%;height:auto;max-height:520px;object-fit:contain;object-position:center;border-radius:10px;background:#fff}
+.room-image-caption{font-size:.78rem;color:var(--muted);padding:10px 3px 1px}
+.button-stack{display:grid;gap:10px}.note{background:#f4f7f4;border-radius:13px;padding:12px 14px;font-size:.82rem;line-height:1.5;color:var(--muted);margin-top:13px}.success-mark{width:88px;height:88px;border-radius:50%;background:#dff3e5;color:var(--green2);display:grid;place-items:center;font-size:49px;margin:10px auto 20px}.center{text-align:center}.center .sub{margin-top:12px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.week-label{font-size:.85rem;color:var(--muted);margin-top:4px}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:15px;background:white}table{border-collapse:collapse;width:100%;min-width:510px;font-size:.82rem}th,td{padding:12px 10px;text-align:center;border-bottom:1px solid #e7eee8}th{background:#f4f8f4;color:#4b6254;font-size:.75rem}tr:last-child td{border-bottom:0}th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:1}th:first-child{background:#f4f8f4}.member-cell{display:flex;align-items:center;gap:8px;font-weight:750;white-space:nowrap}.mini-avatar{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;font-size:19px;flex-shrink:0}.status{width:29px;height:29px;border-radius:50%;font-size:16px;font-weight:900;display:inline-grid;place-items:center}.status.done{background:#dff3e5;color:#20864f}.status.missed{background:#ffe3e1;color:#d83e3e}.status.pending{background:#f0f3f0;color:#849189}.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin:13px 0 18px}.legend span{display:flex;align-items:center;gap:6px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}.stat{padding:17px;border-radius:17px;background:#f4f8f4;border:1px solid var(--line)}.stat .number{font-size:1.8rem;font-weight:900;color:var(--green)}.stat .caption{font-size:.8rem;color:var(--muted)}.reward{border:1px solid #f2d99b;background:#fff8e5;border-radius:18px;padding:18px;display:flex;gap:13px;align-items:center;margin-top:14px}.reward-icon{font-size:37px}.reward strong{display:block;margin-bottom:4px}.tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}.tab{border-radius:99px;padding:9px 13px;background:#edf3ed;color:#4e6254;font-weight:750;font-size:.83rem}.tab.active{background:var(--green);color:white}.admin{margin-top:24px;border-top:1px solid var(--line);padding-top:18px}.admin summary{font-weight:800;color:var(--green);cursor:pointer}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.admin-grid label{font-size:.8rem;color:var(--muted);display:grid;gap:6px}.admin-grid input,.admin-grid select{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:white;font:inherit;color:var(--ink)}.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#20352b;color:white;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);font-size:.9rem;display:none;z-index:10;max-width:90vw;text-align:center}.footer{text-align:center;color:#8a9b90;font-size:.75rem;margin-top:20px}.empty{text-align:center;color:var(--muted);padding:18px}
+@media(max-width:430px){.app{padding:12px 11px 30px}.topbar{margin-bottom:14px}.profile-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.profile:last-child:nth-child(odd){grid-column:1/-1}.panel{border-radius:21px;padding:20px}.date-chip{font-size:.68rem}.admin-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="brand-icon">⌂</div><div>Our Home<div class="tagline">Clean · Happy · Together</div></div></div>
+    <div class="date-chip" id="todayChip">Philippine Time</div>
+  </header>
+
+  <main>
+    <section class="screen active" id="welcomeScreen">
+      <div class="panel hero">
+        <div class="eyebrow">A cleaner home, a happier home</div>
+        <div class="house">🏡</div>
+        <h1>CLEANING<br>IS CARING!</h1>
+        <p class="sub">Small acts, shared by everyone, make our home a happier place.</p>
+        <button class="btn btn-primary" style="min-width:190px" onclick="go('profilesScreen')">Get Started <span>→</span></button>
+      </div>
+    </section>
+
+    <section class="screen" id="profilesScreen">
+      <div class="panel">
+        <div class="eyebrow">Welcome home</div><h2 style="margin-top:8px">Choose your Profile</h2>
+        <p class="sub" style="margin:7px 0 0;text-align:left">Tap your name to see today's chore.</p>
+        <div class="profile-grid" id="profileGrid"></div>
+        <button class="btn btn-secondary btn-block" onclick="showActivity()">📊 &nbsp; View Household Dashboard</button>
+        <p class="small muted center" style="margin:10px 0 0">See everyone's weekly progress, completed chores, and cleaning streaks.</p>
+        <button class="back" onclick="go('welcomeScreen')">← Back</button>
+      </div>
+    </section>
+
+    <section class="screen" id="choreScreen">
+      <div class="panel">
+        <div class="welcome-row" id="choreWelcome"></div>
+        <div class="date-line" id="choreDate"></div>
+        <div class="assignment">
+          <div class="chore-label">Your assigned area</div>
+          <h2 id="assignedTitle">Today is KITCHEN day. Let's go!</h2>
+          <p class="small muted" id="assignedMeta"></p>
+        </div>
+        <div class="room-card" id="roomCard">
+          <div class="room-card-head"><span class="room-chip" id="roomChip">ROOM LAYOUT</span><span class="small muted">Follow the highlighted area</span></div>
+          <img class="room-layout-image" id="roomLayoutImage" src="room-layouts/CR.png" alt="CR cleaning area layout">
+          <div class="room-image-caption" id="roomImageCaption">Green marks the assigned cleaning area.</div>
+        </div>
+        <div class="button-stack">
+          <button class="btn btn-primary btn-block" onclick="submitTask('done')">✓ &nbsp; Task Completed</button>
+          <button class="btn btn-danger btn-block" onclick="submitTask('unable')">✕ &nbsp; Unable to Do Task</button>
+        </div>
+        <div class="note">Please do your best, and let everyone know honestly if you couldn't finish. 💚</div>
+        <button class="back" onclick="go('profilesScreen')">← Change profile</button>
+      </div>
+    </section>
+
+    <section class="screen" id="thanksScreen">
+      <div class="panel center">
+        <div class="success-mark" id="thanksMark">✓</div>
+        <div class="eyebrow">Every little effort matters</div>
+        <h2 id="thanksTitle">Hooray!</h2>
+        <p class="sub" id="thanksMessage"></p>
+        <button class="btn btn-primary btn-block" onclick="showActivity()">Check your Activity →</button>
+        <button class="back" onclick="go('profilesScreen')">← Back to home</button>
+      </div>
+    </section>
+
+    <section class="screen" id="activityScreen">
+      <div class="panel">
+        <div class="section-head">
+          <div><div class="eyebrow">Everyone pitches in</div><h2 style="margin-top:7px">Weekly Participation</h2><div class="week-label" id="weekLabel"></div></div>
+          <button class="btn btn-secondary btn-small" onclick="showStreak()">🔥 View Streak</button>
+        </div>
+        <div class="tabs"><button class="tab active" id="thisWeekTab" onclick="changeWeek(0)">This Week</button><button class="tab" id="lastWeekTab" onclick="changeWeek(-1)">Last Week</button></div>
+        <div class="table-wrap"><table id="activityTable"></table></div>
+        <div class="legend"><span><i class="status done">✓</i> Completed</span><span><i class="status missed">×</i> Unable to complete</span><span><i class="status pending">·</i> Not recorded</span></div>
+        <div class="note">The table follows Philippine time. A new week starts every Monday. This prototype stores records on this device only.</div>
+        <button class="back" onclick="go('profilesScreen')">← Back to profiles</button>
+      </div>
+    </section>
+
+    <section class="screen" id="streakScreen">
+      <div class="panel center">
+        <div class="eyebrow">Keep the good habit going</div><h2 style="margin-top:8px">🔥 Cleaning Streak</h2>
+        <p class="sub">Your streak grows when you complete your assigned chores on their scheduled days.</p>
+        <div class="stats">
+          <div class="stat"><div class="number" id="streakNumber">0</div><div class="caption">Current streak (scheduled days)</div></div>
+          <div class="stat"><div class="number" id="totalNumber">0</div><div class="caption">Tasks completed</div></div>
+        </div>
+        <div class="reward" style="text-align:left"><div class="reward-icon">🎁</div><div><strong id="rewardTitle">Next reward: 7 completed tasks</strong><span class="small muted" id="rewardText">Keep it up! Rewards are granted by Kuya Chan and Ate Jeddah.</span></div></div>
+        <p class="small muted" style="margin-top:16px">Reward milestones are a suggested starting point. Kuya Chan and Ate Jeddah can decide what each reward will be.</p>
+        <button class="btn btn-primary btn-block" onclick="showActivity()">Back to Activity</button>
+        <button class="back" onclick="go('profilesScreen')">← Back to profiles</button>
+      </div>
+    </section>
+  </main>
+  <div class="footer">Made with care for our home 💚</div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const MEMBERS = [
+  {name:"Kuya Chan", emoji:"👨🏻", bg:"#d7edfa", group:1},
+  {name:"Ate Jeddah", emoji:"👩🏻", bg:"#ffe3ca", group:1},
+  {name:"Anel", emoji:"🧑🏽", bg:"#d9f0d0", group:2},
+  {name:"Jhai2", emoji:"👩🏽", bg:"#ffdce0", group:2},
+  {name:"John2", emoji:"👨🏽‍🦱", bg:"#e2defb", group:3}
+];
+const CHORES = ["CR","KITCHEN","LIVING ROOM","TRASH"];
+const CLEANING_DAYS = [1,3,5,0]; // Monday, Wednesday, Friday, Sunday
+const DAY_NAMES = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const STORE_KEY = "cleaningIsCaring.v2";
+const PH_TZ = "Asia/Manila";
+
+// Add your Supabase project URL and anon/publishable key below to enable sync.
+// Never put a service_role/secret key in a public website.
+const SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+let supabaseClient = null;
+let cloudReady = false;
+let selectedMember = null, activityWeekOffset = 0, lastSubmit = null;
+let recordsCache = {};
+const isConfigured = () => SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("PASTE_") && SUPABASE_ANON_KEY.length > 20 && !SUPABASE_ANON_KEY.includes("PASTE_");
+
+function phNow(){return new Date(new Date().toLocaleString("en-US",{timeZone:PH_TZ}));}
+function phDateKey(date=phNow()){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;}
+function dateFromKey(key){const [y,m,d]=key.split("-").map(Number);return new Date(y,m-1,d,12);}
+function keyForDate(date){return phDateKey(date);}
+function startOfWeek(date){const d=new Date(date);d.setHours(12,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d;}
+function addDays(date,n){const d=new Date(date);d.setDate(d.getDate()+n);return d;}
+function prettyDate(d,opts={weekday:"short",month:"short",day:"numeric"}){return d.toLocaleDateString("en-US",{...opts,timeZone:PH_TZ});}
+function isCleaningDay(date){return CLEANING_DAYS.includes(date.getDay());}
+function groupText(member){return member.group===1?"Group 1 · Kuya Chan & Ate Jeddah":member.group===2?"Group 2 · Jhai2 & Anel":"Group 3 · John2";}
+
+// Rotation rule: each scheduled cleaning day advances the cycle by one area.
+// Group 1, 2, and 3 receive consecutive areas; the fourth area is unassigned that day.
+// Group assignments rotate together across the four areas.
+function scheduledDayIndex(date){
+  const target=new Date(date.getFullYear(),date.getMonth(),date.getDate(),12);
+  let cursor=new Date(2024,0,1,12), count=-1;
+  while(cursor<=target){
+    if(isCleaningDay(cursor))count++;
+    cursor.setDate(cursor.getDate()+1);
+  }
+  return Math.max(0,count);
+}
+function assignmentFor(member,date){
+  const cycle=scheduledDayIndex(date);
+  return CHORES[(cycle + member.group - 1) % CHORES.length];
+}
+function todayAssignment(member){
+  const today=phNow();
+  if(isCleaningDay(today))return {chore:assignmentFor(member,today),date:today,isToday:true};
+  let next=addDays(today,1);while(!isCleaningDay(next))next=addDays(next,1);
+  return {chore:assignmentFor(member,next),date:next,isToday:false};
+}
+function avatar(member,big=false){return `<div class="avatar ${big?"big":""}" style="background:${member.bg}" aria-hidden="true">${member.emoji}</div>`;}
+function renderProfiles(){document.getElementById("profileGrid").innerHTML=MEMBERS.map((m,i)=>`<button class="profile" onclick="chooseMember(${i})">${avatar(m)}<span class="profile-name">${m.name}</span><span class="small muted">Group ${m.group}</span></button>`).join("");}
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");window.scrollTo({top:0,behavior:"smooth"});
+  if(id==="activityScreen")renderActivity();
+  if(id==="streakScreen")renderStreak();
+}
+function chooseMember(i){selectedMember=MEMBERS[i];renderChore();go("choreScreen");}
+function renderChore(){
+  const m=selectedMember;if(!m)return;const a=todayAssignment(m);
+  document.getElementById("choreWelcome").innerHTML=`${avatar(m,true)}<div><strong>Hi, ${m.name}!</strong><div class="small muted">${groupText(m)}</div></div>`;
+  document.getElementById("choreDate").textContent=`${prettyDate(phNow(),{weekday:"long",month:"long",day:"numeric",year:"numeric"})} · Philippine time`;
+  document.getElementById("assignedTitle").textContent=a.isToday?`Today is ${a.chore} day. Let's go!`:`Next cleaning day: ${a.chore}. Let's go!`;
+  document.getElementById("assignedMeta").textContent=`${prettyDate(a.date,{weekday:"long",month:"long",day:"numeric"})} · ${groupText(m)}`;
+  const room={
+    "CR":{label:"CR",src:"room-layouts/CR.png",alt:"CR layout with the cleaning area highlighted in green"},
+    "KITCHEN":{label:"KITCHEN",src:"room-layouts/KITCHEN.png",alt:"Kitchen layout with the cleaning area highlighted in green"},
+    "LIVING ROOM":{label:"LIVING ROOM",src:"room-layouts/LIVING_ROOM.png",alt:"Living room layout with the cleaning area highlighted in green"},
+    "TRASH":{label:"TRASH",src:"room-layouts/TRASH.png",alt:"Trash area layout highlighted in green"}
+  }[a.chore];
+  const roomImage=document.getElementById("roomLayoutImage");
+  roomImage.src=room.src;roomImage.alt=room.alt;
+  document.getElementById("roomChip").textContent=room.label;
+  document.getElementById("roomImageCaption").textContent="Green marks the assigned cleaning area. Use this layout as your guide.";
+}
+function localLoad(){try{return JSON.parse(localStorage.getItem(STORE_KEY))||{records:{}}}catch(e){return {records:{}}}}
+function localSave(){localStorage.setItem(STORE_KEY,JSON.stringify({records:recordsCache}));}
+async function refreshRecords(){
+  if(!cloudReady){recordsCache=localLoad().records||{};return;}
+  const {data,error}=await supabaseClient.from("chore_records").select("cleaning_date,member_name,status,chore,group_number,updated_at");
+  if(error){console.error(error);toast("Couldn't sync activity. Check your Supabase setup.");recordsCache=localLoad().records||{};return;}
+  const result={};
+  (data||[]).forEach(r=>{result[r.cleaning_date]=result[r.cleaning_date]||{};result[r.cleaning_date][r.member_name]={status:r.status,chore:r.chore,group:r.group_number,updatedAt:r.updated_at};});
+  recordsCache=result;localSave();
+}
+async function submitTask(status){
+  if(!selectedMember){go("profilesScreen");return}
+  const a=todayAssignment(selectedMember),dateKey=keyForDate(a.date);
+  const record={status,chore:a.chore,group:selectedMember.group,updatedAt:new Date().toISOString()};
+  recordsCache[dateKey]=recordsCache[dateKey]||{};recordsCache[dateKey][selectedMember.name]=record;localSave();
+  if(cloudReady){
+    const {error}=await supabaseClient.from("chore_records").upsert({
+      cleaning_date:dateKey,member_name:selectedMember.name,status,chore:a.chore,
+      group_number:selectedMember.group,updated_at:new Date().toISOString()
+    },{onConflict:"cleaning_date,member_name"});
+    if(error){console.error(error);toast("Saved on this device, but online sync failed.");}
+    else {await refreshRecords();}
+  }else{toast("Saved on this device only. Add Supabase settings to sync phones.");}
+  lastSubmit={status,dateKey,chore:a.chore,member:selectedMember.name};
+  document.getElementById("thanksMark").textContent=status==="done"?"✓":"!";
+  document.getElementById("thanksMark").style.background=status==="done"?"#dff3e5":"#ffe3e1";
+  document.getElementById("thanksMark").style.color=status==="done"?"#20864f":"#d83e3e";
+  document.getElementById("thanksTitle").textContent=status==="done"?"Hooray!":"Thanks for letting us know!";
+  document.getElementById("thanksMessage").textContent=status==="done"?`Thank you for your cooperation, ${selectedMember.name}! Your ${a.chore.toLowerCase()} task is marked completed. 💚`:`Thank you for updating us, ${selectedMember.name}. Your task is marked as unable to complete. Please let the household know if you need help.`;
+  go("thanksScreen");
+}
+function statusCell(record){
+  if(!record)return `<span class="status pending" title="Not recorded">·</span>`;
+  if(record.status==="done")return `<span class="status done" title="Completed">✓</span>`;
+  return `<span class="status missed" title="Unable to complete">×</span>`;
+}
+async function renderActivity(){
+  await refreshRecords();
+  const now=phNow(),start=startOfWeek(addDays(now,activityWeekOffset*7)),days=Array.from({length:7},(_,i)=>addDays(start,i)),end=days[6];
+  document.getElementById("weekLabel").textContent=`${prettyDate(start,{month:"short",day:"numeric"})} – ${prettyDate(end,{month:"short",day:"numeric",year:"numeric"})}`;
+  document.getElementById("thisWeekTab").classList.toggle("active",activityWeekOffset===0);
+  document.getElementById("lastWeekTab").classList.toggle("active",activityWeekOffset===-1);
+  const scheduled=days.filter(isCleaningDay);let html=`<thead><tr><th>Member</th>${scheduled.map(d=>`<th>${DAY_NAMES[d.getDay()]}<br>${d.getMonth()+1}/${d.getDate()}</th>`).join("")}</tr></thead><tbody>`;
+  MEMBERS.forEach(m=>{html+=`<tr><td><div class="member-cell"><span class="mini-avatar" style="background:${m.bg}">${m.emoji}</span>${m.name}</div></td>`;
+    scheduled.forEach(d=>{html+=`<td>${statusCell(recordsCache[keyForDate(d)]?.[m.name])}</td>`});html+="</tr>";});
+  html+="</tbody>";document.getElementById("activityTable").innerHTML=html;
+}
+function changeWeek(offset){activityWeekOffset=offset;renderActivity();}
+function showActivity(){activityWeekOffset=0;go("activityScreen");}
+function getMemberStreak(name){
+  const today=phNow();let cursor=new Date(today.getFullYear(),today.getMonth(),today.getDate(),12),count=0;
+  if(!isCleaningDay(cursor)){do{cursor=addDays(cursor,-1)}while(!isCleaningDay(cursor))}
+  for(let i=0;i<200;i++){const rec=recordsCache[keyForDate(cursor)]?.[name];if(!rec||rec.status!=="done")break;count++;do{cursor=addDays(cursor,-1)}while(!isCleaningDay(cursor));}
+  return count;
+}
+async function renderStreak(){
+  await refreshRecords();const m=selectedMember||MEMBERS[0];let total=0;
+  Object.values(recordsCache).forEach(day=>{if(day[m.name]?.status==="done")total++});
+  const streak=getMemberStreak(m.name);
+  document.getElementById("streakNumber").textContent=streak;document.getElementById("totalNumber").textContent=total;
+  const next=Math.max(7,Math.ceil((total+1)/7)*7);
+  document.getElementById("rewardTitle").textContent=total>=7?`🎉 ${total} completed tasks! Next milestone: ${next}`:"Next reward at 7 completed tasks";
+  document.getElementById("rewardText").textContent=total>=7?"You're building a great habit! Ask Kuya Chan and Ate Jeddah about your reward.":"You're doing great! Keep completing scheduled chores to reach your first reward.";
+}
+function showStreak(){go("streakScreen")}
+let toastTimer;
+function toast(message){const t=document.getElementById("toast");t.textContent=message;t.style.display="block";clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display="none",3200);}
+function updateClock(){document.getElementById("todayChip").textContent=new Date().toLocaleString("en-PH",{timeZone:PH_TZ,weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})+" PHT";}
+async function requestNotificationPermission(){
+  if(!("Notification" in window)){toast("Notifications aren't supported by this browser.");return}
+  const permission=await Notification.requestPermission();
+  if(permission==="granted"){toast("Notifications enabled. This page must stay open for this prototype reminder.");scheduleReminderCheck()}
+  else toast("Notifications are blocked. Enable them in browser settings.");
+}
+let reminderTimer=null,lastReminderDate="";
+function scheduleReminderCheck(){
+  if(reminderTimer)return;
+  reminderTimer=setInterval(()=>{const now=phNow(),key=phDateKey(now);
+    if(now.getHours()===11&&now.getMinutes()===0&&lastReminderDate!==key&&isCleaningDay(now)&&Notification.permission==="granted"){
+      lastReminderDate=key;new Notification("Cleaning Is Caring! 🧽",{body:"Today's a cleaning day. Open the website to check your group's assigned chore."});
+    }},30000);
+}
+function setupAdmin(){
+  const activity=document.getElementById("activityScreen").querySelector(".panel"),details=document.createElement("details");details.className="admin";
+  details.innerHTML=`<summary>Online sync & reminders</summary>
+  <p class="small muted">To share the activity table across phones, create a free Supabase project, run the SQL file provided with this website, then paste your Project URL and anon/publishable key into the two constants near the top of this page's script.</p>
+  <div class="admin-grid"><label>Sync status<input id="syncStatus" value="Checking setup…" readonly></label><label>Reminder time<input value="11:00 AM Philippine time" disabled></label></div>
+  <button class="btn btn-secondary btn-small" style="margin-top:12px" onclick="requestNotificationPermission()">Enable browser notifications</button>
+  <p class="small muted">Reminder prototype works only while this page stays open. Reliable reminders when closed require a hosted PWA and push-notification service.</p>`;
+  activity.appendChild(details);
+}
+async function initializeCloud(){
+  const status=document.getElementById("syncStatus");
+  if(!isConfigured()||!window.supabase){status.value="Local only — Supabase setup needed";return}
+  try{
+    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    const {error}=await supabaseClient.from("chore_records").select("cleaning_date").limit(1);
+    if(error)throw error;
+    cloudReady=true;status.value="Connected · shared online";
+    await refreshRecords();
+    // Refresh shared activity periodically while site is open.
+    setInterval(()=>{if(cloudReady)refreshRecords().then(()=>{if(document.getElementById("activityScreen").classList.contains("active"))renderActivity();});},30000);
+    supabaseClient.channel("chore-records-live").on("postgres_changes",{event:"*",schema:"public",table:"chore_records"},()=>{refreshRecords().then(()=>{if(document.getElementById("activityScreen").classList.contains("active"))renderActivity();});}).subscribe();
+  }catch(e){console.error(e);status.value="Not connected — check URL, key, SQL & policies";cloudReady=false;}
+}
+renderProfiles();updateClock();setInterval(updateClock,30000);setupAdmin();initializeCloud();
+if("Notification" in window && Notification.permission==="granted")scheduleReminderCheck();
+</script>
+</body>
+</html>
