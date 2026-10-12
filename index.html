@@ -307,10 +307,21 @@ th:first-child { background:#f4f8f4; }
           <img class="room-layout-image" id="roomLayoutImage" src="room-layouts/CR.png" alt="CR cleaning area layout">
           <div class="room-image-caption" id="roomImageCaption">Green marks the assigned cleaning area.</div>
         </div>
-        <div class="button-stack">
-          <button class="btn btn-primary btn-block" onclick="submitTask('done')">✓ Task Completed</button>
-          <button class="btn btn-danger btn-block" onclick="submitTask('unable')">✕ Unable to Do Task</button>
-        </div>
+       
+
+<div class="button-stack">
+  <button class="btn btn-primary btn-block" onclick="submitTask('done')">
+    ✓ Task Completed
+  </button>
+
+  <button class="btn btn-danger btn-block" onclick="submitTask('unable')">
+    ✕ Unable to Do Task
+  </button>
+
+  <button class="btn btn-secondary btn-block" onclick="resetMyStatus()">
+    · Reset Status
+  </button>
+</div>
         <div class="note">Please do your best, and let everyone know honestly if you couldn't finish. 💚</div>
         <button class="back" onclick="go('profilesScreen')">← Change profile</button>
       </div>
@@ -688,6 +699,59 @@ async function refreshRecords() {
   localSave();
 }
 
+async function resetMyStatus() {
+  if (!selectedMember) {
+    toast("Please sign in to your profile first.");
+    go("profilesScreen");
+    return;
+  }
+
+  const member = selectedMember;
+  const assignment = todayAssignment(member);
+  const dateKey = keyForDate(assignment.date);
+
+  if (cloudReady) {
+    const { error } = await supabaseClient
+      .from("chore_records")
+      .upsert({
+        cleaning_date: dateKey,
+        member_name: member.name,
+        status: "pending",
+        chore: assignment.chore,
+        group_number: member.group,
+        updated_at: new Date().toISOString()
+      }, {
+        onConflict: "cleaning_date,member_name"
+      });
+
+    if (error) {
+      console.error(error);
+      toast("Could not reset status. Please try again.");
+      return;
+    }
+
+    await refreshRecords();
+  } else {
+    recordsCache[dateKey] = recordsCache[dateKey] || {};
+    recordsCache[dateKey][member.name] = {
+      status: "pending",
+      chore: assignment.chore,
+      group: member.group,
+      updatedAt: new Date().toISOString()
+    };
+
+    localSave();
+  }
+
+
+toast(cloudReady
+  ? "Status reset to · Not recorded!"
+  : "Status reset on this device only.");
+
+showActivity();
+
+}
+  
 async function submitTask(status) {
   if(!selectedMember) {
     go("profilesScreen");
@@ -751,11 +815,23 @@ async function submitTask(status) {
   go("thanksScreen");
 }
 
+
 function statusCell(record) {
-  if(!record) return `<span class="status pending" title="Not recorded">·</span>`;
-  if(record.status==="done") return `<span class="status done" title="Completed">✓</span>`;
-  return `<span class="status missed" title="Unable to complete">×</span>`;
+  if (!record || record.status === "pending") {
+    return '<span class="status pending" title="Not recorded">·</span>';
+  }
+
+  if (record.status === "done") {
+    return '<span class="status done" title="Completed">✓</span>';
+  }
+
+  if (record.status === "unable") {
+    return '<span class="status missed" title="Unable to complete">×</span>';
+  }
+
+  return '<span class="status pending" title="Not recorded">·</span>';
 }
+
 
 function renderDailyDashboard() {
   const today = phNow();
