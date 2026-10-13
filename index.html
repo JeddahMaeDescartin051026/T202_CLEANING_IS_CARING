@@ -27,9 +27,9 @@ body {
   color:var(--ink);
   min-height:100vh;
 }
-button,input { font:inherit; }
+button,input,textarea { font:inherit; }
 button { cursor:pointer; border:0; }
-button:focus-visible,input:focus-visible {
+button:focus-visible,input:focus-visible,textarea:focus-visible {
   outline:3px solid #e6ad3e;
   outline-offset:3px;
 }
@@ -159,6 +159,8 @@ h3 { margin:0 0 8px; }
   margin:12px 0 16px;
 }
 table { border-collapse:collapse;width:100%;min-width:500px;font-size:.82rem; }
+#dailyTable { min-width:700px; }
+#dailyTable .notes-cell { text-align:left;white-space:normal;min-width:210px;max-width:330px;overflow-wrap:anywhere;line-height:1.45; }
 th,td { padding:12px 10px;text-align:center;border-bottom:1px solid #e7eee8; }
 th { background:#f4f8f4;color:#4b6254;font-size:.75rem; }
 tr:last-child td { border-bottom:0; }
@@ -201,10 +203,11 @@ th:first-child { background:#f4f8f4; }
 .tab.active { background:var(--green);color:white; }
 .field { margin:16px 0;text-align:left; }
 .field label { display:block;font-weight:750;font-size:.85rem;margin-bottom:7px; }
-.field input {
+.field input,.field textarea {
   width:100%;padding:13px 14px;border:1px solid var(--line);
   border-radius:12px;background:white;color:var(--ink);
 }
+.field textarea { min-height:120px;resize:vertical;line-height:1.5; }
 .error-message {
   color:#c62828;background:#fff0ef;border:1px solid #ffd4d1;
   padding:11px 13px;border-radius:12px;font-size:.85rem;
@@ -367,36 +370,71 @@ th:first-child { background:#f4f8f4; }
       <div class="panel">
         <div class="welcome-row" id="choreWelcome"></div>
         <div class="date-line" id="choreDate"></div>
-        <div class="assignment">
-          <div class="chore-label">Your assigned area</div>
-          <h2 id="assignedTitle"></h2>
-          <p class="small muted" id="assignedMeta"></p>
-        </div>
-        <div class="room-card" id="roomCard">
-          <div class="room-card-head">
-            <span class="room-chip" id="roomChip">ROOM LAYOUT</span>
-            <span class="small muted">Follow the highlighted area</span>
+        <div id="scheduledChoreContent">
+          <div class="assignment">
+            <div class="chore-label">Your assigned area</div>
+            <h2 id="assignedTitle"></h2>
+            <p class="small muted" id="assignedMeta"></p>
           </div>
-          <img class="room-layout-image" id="roomLayoutImage" src="room-layouts/CR.png" alt="CR cleaning area layout">
-          <div class="room-image-caption" id="roomImageCaption">Green marks the assigned cleaning area.</div>
+          <div class="room-card" id="roomCard">
+            <div class="room-card-head">
+              <span class="room-chip" id="roomChip">ROOM LAYOUT</span>
+              <span class="small muted">Follow the highlighted area</span>
+            </div>
+            <img class="room-layout-image" id="roomLayoutImage" src="room-layouts/CR.png" alt="CR layout with the cleaning area highlighted in green">
+            <div class="room-image-caption" id="roomImageCaption">Green marks the assigned cleaning area.</div>
+          </div>
+          <div class="button-stack">
+            <button class="btn btn-primary btn-block" onclick="submitTask('done')">✓ Task Completed</button>
+            <button class="btn btn-danger btn-block" onclick="openUnableReason()">✕ Unable to Do Task</button>
+            <button class="btn btn-secondary btn-block" onclick="resetMyStatus()">· Reset Status</button>
+          </div>
+          <div class="note">Please do your best, and let everyone know honestly if you couldn't finish. 💚</div>
         </div>
-       
 
-<div class="button-stack">
-  <button class="btn btn-primary btn-block" onclick="submitTask('done')">
-    ✓ Task Completed
-  </button>
-
-  <button class="btn btn-danger btn-block" onclick="submitTask('unable')">
-    ✕ Unable to Do Task
-  </button>
-
-  <button class="btn btn-secondary btn-block" onclick="resetMyStatus()">
-    · Reset Status
-  </button>
-</div>
-        <div class="note">Please do your best, and let everyone know honestly if you couldn't finish. 💚</div>
+        <div id="noChoreContent" class="center" style="display:none;padding:20px 0 8px">
+          <div class="success-mark">🌿</div>
+          <h2>No chores for today!</h2>
+          <p class="sub">Clean As You Go. Enjoy your day, and help keep our home tidy along the way. 💚</p>
+          <button class="btn btn-primary btn-block" onclick="viewNextSchedule()">View Next Cleaning Schedule</button>
+        </div>
         <button class="back" onclick="go('profilesScreen')">← Change profile</button>
+      </div>
+    </section>
+
+    <section class="screen" id="unableReasonScreen">
+      <div class="panel">
+        <div class="eyebrow">A quick note</div>
+        <h2 style="margin-top:8px">Unable to do your task?</h2>
+        <p class="sub" style="text-align:left;margin-top:10px">Please share a short description of why you couldn't complete your assigned chore. Your note will be visible to everyone on the household dashboard.</p>
+        <form onsubmit="submitUnableReason(event)">
+          <div class="field">
+            <label for="unableReason">Reason</label>
+            <textarea id="unableReason" name="unableReason" rows="4" maxlength="500" placeholder="Briefly explain why you're unable to do the task..." required></textarea>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">Submit</button>
+        </form>
+        <button class="back" onclick="go('choreScreen')">← Back to your task</button>
+      </div>
+    </section>
+
+    <section class="screen" id="unableThanksScreen">
+      <div class="panel center">
+        <div class="success-mark">💚</div>
+        <div class="eyebrow">Thank you for letting us know</div>
+        <h2 style="margin-top:8px">That's okay!</h2>
+        <p class="sub">There are things we can't control. We'll see you on the next task!</p>
+        <button class="btn btn-primary btn-block" onclick="showActivity()">Dashboard</button>
+      </div>
+    </section>
+
+    <section class="screen" id="nextScheduleScreen">
+      <div class="panel center">
+        <div class="success-mark">📅</div>
+        <div class="eyebrow">Coming up next</div>
+        <h2 style="margin-top:8px">Your next cleaning schedule</h2>
+        <p class="sub" id="nextScheduleMessage"></p>
+        <button class="btn btn-primary btn-block" onclick="showActivity()">Dashboard</button>
       </div>
     </section>
 
@@ -787,51 +825,87 @@ function renderChore() {
   const m = selectedMember;
   if(!m) return;
 
-  const a = todayAssignment(m);
+  const today = phNow();
+  const cleaningToday = isCleaningDay(today);
+  const scheduledContent = document.getElementById("scheduledChoreContent");
+  const noChoreContent = document.getElementById("noChoreContent");
 
   document.getElementById("choreWelcome").innerHTML =
     `${avatar(m,true)}<div><strong>Hi, ${m.name}!</strong><div class="small muted">${groupText(m)}</div></div>`;
 
   document.getElementById("choreDate").textContent =
-    `${prettyDate(phNow(),{weekday:"long",month:"long",day:"numeric",year:"numeric"})} · Philippine time`;
+    `${prettyDate(today,{weekday:"long",month:"long",day:"numeric",year:"numeric"})} · Philippine time`;
 
+  scheduledContent.style.display = cleaningToday ? "block" : "none";
+  noChoreContent.style.display = cleaningToday ? "none" : "block";
+
+  if(!cleaningToday) return;
+
+  const a = {chore:assignmentFor(m,today),date:today,isToday:true};
   document.getElementById("assignedTitle").textContent =
-    a.isToday ? `Today is ${a.chore} day. Let's go!` : `Next cleaning day: ${a.chore}. Let's go!`;
+    `Today is ${a.chore} day. Let's go!`;
 
   document.getElementById("assignedMeta").textContent =
     `${prettyDate(a.date,{weekday:"long",month:"long",day:"numeric",year:"numeric"})} · ${groupText(m)}`;
 
   const rooms = {
-    "CR": {
-      label:"CR",
-      src:"room-layouts/CR.png",
-      alt:"CR layout with the cleaning area highlighted in green"
-    },
-    "KITCHEN": {
-      label:"KITCHEN",
-      src:"room-layouts/KITCHEN.png",
-      alt:"Kitchen layout with the cleaning area highlighted in green"
-    },
-    "LIVING ROOM": {
-      label:"LIVING ROOM",
-      src:"room-layouts/LIVING_ROOM.png",
-      alt:"Living room layout with the cleaning area highlighted in green"
-    },
-    "TRASH": {
-      label:"TRASH",
-      src:"room-layouts/TRASH.png",
-      alt:"Trash area layout highlighted in green"
-    }
+    "CR": {label:"CR",src:"room-layouts/CR.png",alt:"CR layout with the cleaning area highlighted in green"},
+    "KITCHEN": {label:"KITCHEN",src:"room-layouts/KITCHEN.png",alt:"Kitchen layout with the cleaning area highlighted in green"},
+    "LIVING ROOM": {label:"LIVING ROOM",src:"room-layouts/LIVING_ROOM.png",alt:"Living room layout with the cleaning area highlighted in green"},
+    "TRASH": {label:"TRASH",src:"room-layouts/TRASH.png",alt:"Trash area layout highlighted in green"}
   };
 
   const room = rooms[a.chore];
   const image = document.getElementById("roomLayoutImage");
-
   image.src = room.src;
   image.alt = room.alt;
   document.getElementById("roomChip").textContent = room.label;
   document.getElementById("roomImageCaption").textContent =
     "Green marks the assigned cleaning area. Use this layout as your guide.";
+}
+
+function nextCleaningDate(fromDate=phNow()) {
+  let next = addDays(fromDate,1);
+  while(!isCleaningDay(next)) next = addDays(next,1);
+  return next;
+}
+
+function viewNextSchedule() {
+  if(!selectedMember) {
+    go("profilesScreen");
+    return;
+  }
+  const next = nextCleaningDate(phNow());
+  const dateText = prettyDate(next,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+  document.getElementById("nextScheduleMessage").textContent =
+    `Your next cleaning schedule is ${dateText}. Check your profile on the same day to view your task.`;
+  go("nextScheduleScreen");
+}
+
+function openUnableReason() {
+  if(!selectedMember) {
+    go("profilesScreen");
+    return;
+  }
+  document.getElementById("unableReason").value = "";
+  go("unableReasonScreen");
+}
+
+function submitUnableReason(event) {
+  event.preventDefault();
+  const reason = document.getElementById("unableReason").value.trim();
+  if(!reason) {
+    document.getElementById("unableReason").focus();
+    toast("Please enter a short reason before submitting.");
+    return;
+  }
+  submitTask("unable",reason);
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[char]);
 }
 
 function localLoad() {
@@ -854,7 +928,7 @@ async function refreshRecords() {
 
   const {data,error} = await supabaseClient
     .from("chore_records")
-    .select("cleaning_date,member_name,status,chore,group_number,updated_at");
+    .select("cleaning_date,member_name,status,chore,group_number,notes,updated_at");
 
   if(error) {
     console.error(error);
@@ -871,6 +945,7 @@ async function refreshRecords() {
       status:r.status,
       chore:r.chore,
       group:r.group_number,
+      notes:r.notes || "",
       updatedAt:r.updated_at
     };
   });
@@ -899,6 +974,7 @@ async function resetMyStatus() {
         status: "pending",
         chore: assignment.chore,
         group_number: member.group,
+        notes: "",
         updated_at: new Date().toISOString()
       }, {
         onConflict: "cleaning_date,member_name"
@@ -917,6 +993,7 @@ async function resetMyStatus() {
       status: "pending",
       chore: assignment.chore,
       group: member.group,
+      notes: "",
       updatedAt: new Date().toISOString()
     };
 
@@ -932,7 +1009,7 @@ showActivity();
 
 }
   
-async function submitTask(status) {
+async function submitTask(status, notes="") {
   if(!selectedMember) {
     go("profilesScreen");
     return;
@@ -944,6 +1021,7 @@ async function submitTask(status) {
     status,
     chore:a.chore,
     group:selectedMember.group,
+    notes: status === "unable" ? notes : "",
     updatedAt:new Date().toISOString()
   };
 
@@ -958,6 +1036,7 @@ async function submitTask(status) {
       status,
       chore:a.chore,
       group_number:selectedMember.group,
+      notes: status === "unable" ? notes : "",
       updated_at:new Date().toISOString()
     },{onConflict:"cleaning_date,member_name"});
 
@@ -978,19 +1057,17 @@ async function submitTask(status) {
     member:selectedMember.name
   };
 
-  document.getElementById("thanksMark").textContent = status==="done"?"✓":"!";
-  document.getElementById("thanksMark").style.background =
-    status==="done"?"#dff3e5":"#ffe3e1";
-  document.getElementById("thanksMark").style.color =
-    status==="done"?"#20864f":"#d83e3e";
+  if(status === "unable") {
+    go("unableThanksScreen");
+    return;
+  }
 
-  document.getElementById("thanksTitle").textContent =
-    status==="done"?"Hooray!":"Thanks for letting us know!";
-
+  document.getElementById("thanksMark").textContent = "✓";
+  document.getElementById("thanksMark").style.background = "#dff3e5";
+  document.getElementById("thanksMark").style.color = "#20864f";
+  document.getElementById("thanksTitle").textContent = "Hooray!";
   document.getElementById("thanksMessage").textContent =
-    status==="done"
-      ? `Thank you for your cooperation, ${selectedMember.name}! Your ${a.chore.toLowerCase()} task is marked completed. 💚`
-      : `Thank you for updating us, ${selectedMember.name}. Your task is marked as unable to complete. Please let the household know if you need help.`;
+    `Thank you for your cooperation, ${selectedMember.name}! Your ${a.chore.toLowerCase()} task is marked completed. 💚`;
 
   go("thanksScreen");
 }
@@ -1028,6 +1105,7 @@ function renderDailyDashboard() {
       <th>Group</th>
       <th>Today's Task</th>
       <th>Status</th>
+      <th>Notes</th>
     </tr></thead><tbody>`;
 
   MEMBERS.forEach(member => {
@@ -1048,6 +1126,7 @@ function renderDailyDashboard() {
       <td>Group ${member.group}</td>
       <td>${taskText}</td>
       <td>${statusHTML}</td>
+      <td class="notes-cell">${cleaningToday && record?.notes ? escapeHTML(record.notes) : "—"}</td>
     </tr>`;
   });
 
@@ -1266,7 +1345,7 @@ async function initializeCloud() {
 
 renderProfiles();
 updateClock();
-setInterval(updateClock,30000);
+  setInterval(updateClock,30000);
 setupAdmin();
 initializeCloud();
 </script>
